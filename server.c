@@ -69,17 +69,97 @@ int main(int argc, char **argv) {
         size_t count = recv(csock, buf, BUFSZ - 1, 0); //recebe mensagem do cliente
         printf("[msg] %s, %d bytes: %s\n", caddrstr, (int)count, buf);
 
-        sprintf(buf, "remote endpoint: %.1000s\n", caddrstr);
-        count = send(csock, buf, strlen(buf) + 1, 0); //envia retorno para o cliente de qual servidor esta conectado
-        if (count != strlen(buf) + 1) {
-            logexit("send");
+        //código para locais de vacina
+
+        #define MAX_VAC_PLACES 50
+
+        struct Locations{int x;int y;} places[MAX_VAC_PLACES];
+
+        int locationsOnSystem =0; //locais cadastrados no sistema
+
+        //procura pelo local no sistema
+        struct Locations* where(int x, int y){
+        struct Locations* which = places;
+
+        for(int i=0; i< locationsOnSystem;i++){
+            if(places[i].x == x && places[i].y == y){
+            return which+i;
+            }
+        }
+        return NULL;
         }
 
-        printf("testeawdawdw");
+        //remove local do sistema
+        struct Locations* rmPlace(int x, int y){
+        struct Locations* which = places;
+
+        for(int i=0; i< locationsOnSystem;i++){
+            if(places[i].x == x && places[i].y == y){
+                
+                for(int a = i; a<locationsOnSystem; a++){
+                    places[a].x = places[a+1].x;
+                    places[a].y = places[a+1].y;
+                    
+                }
+                
+                locationsOnSystem--;
+            }
+        }
+        return NULL;
+        }
+
+
+        void printLocais(){
+            char a[500];
+            char b[100];
+            char* c = b;
+            char* final = a;
+
+            for (int i = 0; i < locationsOnSystem; i++)
+            {
+                sprintf(abs, "%i %i ", places[i].x, places[i].y);
+                strcat(final, b);
+            }
+            
+        }
+
+
+        struct Locations* 
+       
+
+        if(mensagem =add){
+           if(locationsOnSystem>=MAX_VAC_PLACES){
+                sprintf(buf, "Local não adicionado, numero maximo de lugares ja atingido.");
+           }else if(where(x,y) !=NULL){ 
+               sprintf(buf, "Local não adicionado, já existe no sistema.");
+           }else{
+                places[locationsOnSystem].x = x;
+                places[locationsOnSystem].y = y;
+                locationsOnSystem++;
+               sprintf(buf, "Local adicionado.");
+           }
+
+        }else if(mensagem = remove){
+            if(where(x,y) !=NULL){
+                rmPlace(x,y);
+                sprintf(buf, "Local removido.");
+            }else{
+                sprintf(buf, "Local não cadastrado.");
+            }
+        }else if(list){
+            sprintf(buf, "Locais registrados no sistema: %c", final );
+        }else if(query){
+           sprintf(buf, "Local mais proximo para sua vacinação: ", variavel local mais proximo);
+        }else if(kill){
+            sprintf(buf, "Servidor finalizado.");
+        }else{
+            sprintf(buf, "Comando não reconhecido.");
+        }
+
         count = send(csock, buf, strlen(buf) + 1, 0); //envia retorno para o cliente de qual servidor esta conectado
         if (count != strlen(buf) + 1) {
             logexit("send");
-        }
+        }   
 
 
         close(csock);
