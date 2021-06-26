@@ -46,9 +46,9 @@ int main(int argc, char **argv) {
         logexit("listen");
     }
 
-    char addrstr[BUFSZ];
+    char addrstr[BUFSZ]; 
     addrtostr(addr, addrstr, BUFSZ);
-    printf("bound to %s, waiting connections\n", addrstr);
+    printf("bound to %s, waiting connections\n", addrstr); //primeira mensagem
 
     while (1) {
         struct sockaddr_storage cstorage;
@@ -62,18 +62,26 @@ int main(int argc, char **argv) {
 
         char caddrstr[BUFSZ];
         addrtostr(caddr, caddrstr, BUFSZ);
-        printf("[log] connection from %s\n", caddrstr);
+        printf("[log] connection from %s\n", caddrstr); //terceira mensagem
 
         char buf[BUFSZ];
         memset(buf, 0, BUFSZ);
-        size_t count = recv(csock, buf, BUFSZ - 1, 0);
+        size_t count = recv(csock, buf, BUFSZ - 1, 0); //recebe mensagem do cliente
         printf("[msg] %s, %d bytes: %s\n", caddrstr, (int)count, buf);
 
         sprintf(buf, "remote endpoint: %.1000s\n", caddrstr);
-        count = send(csock, buf, strlen(buf) + 1, 0);
+        count = send(csock, buf, strlen(buf) + 1, 0); //envia retorno para o cliente de qual servidor esta conectado
         if (count != strlen(buf) + 1) {
             logexit("send");
         }
+
+        printf("testeawdawdw");
+        count = send(csock, buf, strlen(buf) + 1, 0); //envia retorno para o cliente de qual servidor esta conectado
+        if (count != strlen(buf) + 1) {
+            logexit("send");
+        }
+
+
         close(csock);
     }
 

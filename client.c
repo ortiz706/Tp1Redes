@@ -40,12 +40,12 @@ int main(int argc, char **argv) {
 	char addrstr[BUFSZ];
 	addrtostr(addr, addrstr, BUFSZ);
 
-	printf("connected to %s\n", addrstr);
+	printf("connected to %s\n", addrstr); //segunda mensagem 
 
 	char buf[BUFSZ];
 	memset(buf, 0, BUFSZ);
 	printf("mensagem> ");
-	fgets(buf, BUFSZ-1, stdin);
+	fgets(buf, BUFSZ-1, stdin); //envia a mensagem do cliente
 	size_t count = send(s, buf, strlen(buf)+1, 0);
 	if (count != strlen(buf)+1) {
 		logexit("send");
