@@ -129,9 +129,9 @@ int main(int argc, char **argv) {
 
         if(mensagem =add){
            if(locationsOnSystem>=MAX_VAC_PLACES){
-                sprintf(buf, "Local não adicionado, numero maximo de lugares ja atingido.");
+                sprintf(buf, "Local nao adicionado, numero maximo de lugares ja atingido.");
            }else if(where(x,y) !=NULL){ 
-               sprintf(buf, "Local não adicionado, já existe no sistema.");
+               sprintf(buf, "Local nao adicionado, já existe no sistema.");
            }else{
                 places[locationsOnSystem].x = x;
                 places[locationsOnSystem].y = y;
@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
                 rmPlace(x,y);
                 sprintf(buf, "Local removido.");
             }else{
-                sprintf(buf, "Local não cadastrado.");
+                sprintf(buf, "Local nao cadastrado.");
             }
         }else if(list){
             sprintf(buf, "Locais registrados no sistema: %c", final );
@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
         }else if(kill){
             sprintf(buf, "Servidor finalizado.");
         }else{
-            sprintf(buf, "Comando não reconhecido.");
+            sprintf(buf, "Comando nao reconhecido.");
         }
 
         count = send(csock, buf, strlen(buf) + 1, 0); //envia retorno para o cliente de qual servidor esta conectado
