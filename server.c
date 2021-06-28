@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <math.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -124,7 +125,29 @@ int main(int argc, char **argv) {
         }
 
 
-        struct Locations* 
+        struct Locations* nearest(int x, int y){
+            //distancia entre 2 pontos é
+            //d=sqrt((xb-xa)^2+(yb-ya)^2)
+            int d = 0;
+            int aux = 0;
+
+            for (int i = 0; i < locationsOnSystem; i++)
+            {
+                //calcular distancia entre o local inserido e todos os locais
+                aux = sqrt((places[i].x-x)^2+(places[i].y-y)^2);
+                
+                //conferir se a distancia calculada é menor que a anterior
+                if (i=0 || aux<d)
+                {
+                    d=aux;
+                }
+                  
+            }
+            
+            
+            return d;
+            
+        }
        
 
         if(mensagem =add){
@@ -149,7 +172,8 @@ int main(int argc, char **argv) {
         }else if(list){
             sprintf(buf, "Locais registrados no sistema: %c", final );
         }else if(query){
-           sprintf(buf, "Local mais proximo para sua vacinação: ", variavel local mais proximo);
+            nearest(x,y);
+           sprintf(buf, "Local mais proximo para sua vacinação: %i", d);
         }else if(kill){
             sprintf(buf, "Servidor finalizado.");
         }else{
