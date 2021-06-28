@@ -176,6 +176,7 @@ int main(int argc, char **argv) {
            sprintf(buf, "Local mais proximo para sua vacinação: %i", d);
         }else if(kill){
             sprintf(buf, "Servidor finalizado.");
+            exit(EXIT_SUCCESS);
         }else{
             sprintf(buf, "Comando nao reconhecido.");
         }
