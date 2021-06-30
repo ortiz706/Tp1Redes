@@ -70,6 +70,20 @@ int main(int argc, char **argv) {
         size_t count = recv(csock, buf, BUFSZ - 1, 0); //recebe mensagem do cliente
         printf("[msg] %s, %d bytes: %s\n", caddrstr, (int)count, buf);
 
+        //quebrando a mensagem recebida
+
+        char * mensagem = buf;
+
+        char * auxiliar;
+        auxiliar = strtok(mensagem," \n");
+
+        while(ponter!=NULL){
+            ponter=strtok(NULL," \n");
+        }
+
+
+
+
         //código para locais de vacina
 
         #define MAX_VAC_PLACES 50
@@ -150,38 +164,39 @@ int main(int argc, char **argv) {
         }
        
 
-        if(mensagem =add){
+        if(mensagem[0]=="add" || mensagem[0]=="Add" || mensagem[0]=="ADD"){
            if(locationsOnSystem>=MAX_VAC_PLACES){
                 sprintf(buf, "Local nao adicionado, numero maximo de lugares ja atingido.");
-           }else if(where(x,y) !=NULL){ 
+           }else if(where(mensagem[1],mensagem[2]) !=NULL){ 
                sprintf(buf, "Local nao adicionado, já existe no sistema.");
            }else{
-                places[locationsOnSystem].x = x;
-                places[locationsOnSystem].y = y;
+                places[locationsOnSystem].x = mensagem[1];
+                places[locationsOnSystem].y = mensagem[2];
                 locationsOnSystem++;
                sprintf(buf, "Local adicionado.");
            }
 
-        }else if(mensagem = remove){
-            if(where(x,y) !=NULL){
-                rmPlace(x,y);
+        }else if(mensagem[0]=="remove" || mensagem[0]=="Remove" || mensagem[0]=="REMOVE"){
+            if(where(mensagem[1],mensagem[2]) !=NULL){
+                rmPlace(mensagem[1], mensagem[2]);
                 sprintf(buf, "Local removido.");
             }else{
                 sprintf(buf, "Local nao cadastrado.");
             }
-        }else if(list){
+        }else if(mensagem[0]=="list" || mensagem[0]=="List" || mensagem[0]=="LIST"){
+            printlocais();
             sprintf(buf, "Locais registrados no sistema: %c", final );
-        }else if(query){
-            nearest(x,y);
+        }else if(mensagem[0]=="query" || mensagem[0]=="Query" || mensagem[0]=="QUERY"){
+            nearest(int x,int y);
            sprintf(buf, "Local mais proximo para sua vacinação: %i", d);
-        }else if(kill){
+        }else if(mensagem[0]=="kill" || mensagem[0]=="Kill" || mensagem[0]=="KILL"){
             sprintf(buf, "Servidor finalizado.");
             exit(EXIT_SUCCESS);
         }else{
             sprintf(buf, "Comando nao reconhecido.");
         }
 
-        count = send(csock, buf, strlen(buf) + 1, 0); //envia retorno para o cliente de qual servidor esta conectado
+        count = send(csock, buf, strlen(buf), 0); //envia retorno para o cliente de qual servidor esta conectado
         if (count != strlen(buf) + 1) {
             logexit("send");
         }   
