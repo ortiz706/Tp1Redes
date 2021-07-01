@@ -17,6 +17,97 @@ void usage(int argc, char **argv) {
     exit(EXIT_FAILURE);
 }
 
+ //código para locais de vacina
+
+        #define MAX_VAC_PLACES 50
+
+        struct Locations{int x;int y;}places[MAX_VAC_PLACES];
+
+        int locationsOnSystem =0; //locais cadastrados no sistema
+
+        //procura pelo local no sistema
+         int find(int x, int y){
+            
+         for(int i=0; i< locationsOnSystem;i++){
+             if(places[i].x == x && places[i].y == y){
+             return 0;
+             }
+         }
+         return 1;
+         }
+
+
+        // int find(int x, int y){
+        //     for(int i=0; i<locationsOnSystem;i++){
+        //         printf("%i", places[i].x);
+        //         return 1;
+        //     }
+        //     return 1;
+        // }
+
+        //remove local do sistema
+        void rmPlace(int x, int y){
+        
+
+        for(int i=0; i< locationsOnSystem;i++){
+            if(places[i].x == x && places[i].y == y){
+                
+                for(int a = i; a<locationsOnSystem-1; a++){
+                    places[a].x = places[a+1].x;
+                    places[a].y = places[a+1].y;
+                    
+                }
+                
+                locationsOnSystem--;
+                
+            }
+        }
+       
+        }
+
+
+        void printLocais(char * aux1){
+           
+            char a[10000];
+
+            for (int i = 0; i < locationsOnSystem; i++)
+            {
+                sprintf(a,"%i %i ", places[i].x, places[i].y);
+                strcat(aux1,a);
+            }
+            
+
+        }
+
+
+        struct Locations nearest(int x, int y){
+            //distancia entre 2 pontos é
+            //d=sqrt((xb-xa)^2+(yb-ya)^2)
+            int d = 0;
+            int aux = 0;
+            struct Locations local;
+
+            for (int i = 0; i < locationsOnSystem; i++)
+            {
+                //calcular distancia entre o local inserido e todos os locais
+                aux = sqrt(((places[i].x-x)^2)+((places[i].y-y)^2));
+                
+                //conferir se a distancia calculada é menor que a anterior
+                if (i==0 || aux<d)
+                {
+                    d=aux;
+                    local.x=places[i].x;
+                    local.y=places[i].y;
+
+                }
+                  
+            }
+            
+            
+            return local;
+            
+        }
+
 int main(int argc, char **argv) {
     if (argc < 3) {
         usage(argc, argv);
@@ -72,124 +163,65 @@ int main(int argc, char **argv) {
 
         //quebrando a mensagem recebida
 
-        char * mensagem = buf;
 
-        char * auxiliar;
-        auxiliar = strtok(mensagem," \n");
+        char a[10]="", b[10]="", c[10]="";
+        char * msg = buf;
+        char * comando[3];
+        comando[0] = a;
+        comando[1] = b;
+        comando[2] = c;
 
-        while(ponter!=NULL){
-            ponter=strtok(NULL," \n");
+        int contador = 0;
+        msg = strtok(msg," \n");
+        while (msg!=NULL)
+        {
+            comando[contador] = msg;
+            msg = strtok(NULL," \n");
+            contador++;
         }
+        
 
+        
 
+        
+        
+        
 
-
-        //código para locais de vacina
-
-        #define MAX_VAC_PLACES 50
-
-        struct Locations{int x;int y;} places[MAX_VAC_PLACES];
-
-        int locationsOnSystem =0; //locais cadastrados no sistema
-
-        //procura pelo local no sistema
-        struct Locations* where(int x, int y){
-        struct Locations* which = places;
-
-        for(int i=0; i< locationsOnSystem;i++){
-            if(places[i].x == x && places[i].y == y){
-            return which+i;
-            }
-        }
-        return NULL;
-        }
-
-        //remove local do sistema
-        struct Locations* rmPlace(int x, int y){
-        struct Locations* which = places;
-
-        for(int i=0; i< locationsOnSystem;i++){
-            if(places[i].x == x && places[i].y == y){
-                
-                for(int a = i; a<locationsOnSystem; a++){
-                    places[a].x = places[a+1].x;
-                    places[a].y = places[a+1].y;
-                    
-                }
-                
-                locationsOnSystem--;
-            }
-        }
-        return NULL;
-        }
-
-
-        void printLocais(){
-            char a[500];
-            char b[100];
-            char* c = b;
-            char* final = a;
-
-            for (int i = 0; i < locationsOnSystem; i++)
-            {
-                sprintf(abs, "%i %i ", places[i].x, places[i].y);
-                strcat(final, b);
-            }
-            
-        }
-
-
-        struct Locations* nearest(int x, int y){
-            //distancia entre 2 pontos é
-            //d=sqrt((xb-xa)^2+(yb-ya)^2)
-            int d = 0;
-            int aux = 0;
-
-            for (int i = 0; i < locationsOnSystem; i++)
-            {
-                //calcular distancia entre o local inserido e todos os locais
-                aux = sqrt((places[i].x-x)^2+(places[i].y-y)^2);
-                
-                //conferir se a distancia calculada é menor que a anterior
-                if (i=0 || aux<d)
-                {
-                    d=aux;
-                }
-                  
-            }
-            
-            
-            return d;
-            
-        }
+       
        
 
-        if(mensagem[0]=="add" || mensagem[0]=="Add" || mensagem[0]=="ADD"){
+        if( 0==strcmp(comando[0], "add") || 0==strcmp(comando[0], "Add") || 0==strcmp(comando[0], "ADD")){
+           
            if(locationsOnSystem>=MAX_VAC_PLACES){
                 sprintf(buf, "Local nao adicionado, numero maximo de lugares ja atingido.");
-           }else if(where(mensagem[1],mensagem[2]) !=NULL){ 
+                
+           }else if(find(atoi(comando[1]),atoi(comando[2])) !=1){ 
                sprintf(buf, "Local nao adicionado, já existe no sistema.");
            }else{
-                places[locationsOnSystem].x = mensagem[1];
-                places[locationsOnSystem].y = mensagem[2];
+                places[locationsOnSystem].x = atoi(comando[1]) ;
+                places[locationsOnSystem].y = atoi(comando[2]) ;
                 locationsOnSystem++;
                sprintf(buf, "Local adicionado.");
            }
 
-        }else if(mensagem[0]=="remove" || mensagem[0]=="Remove" || mensagem[0]=="REMOVE"){
-            if(where(mensagem[1],mensagem[2]) !=NULL){
-                rmPlace(mensagem[1], mensagem[2]);
+        }else if(0==strcmp(comando[0], "rm") || 0==strcmp(comando[0], "Rm") || 0==strcmp(comando[0], "RM")){
+            
+            if(find(atoi(comando[1]),atoi(comando[2])) != 1){
+                rmPlace(atoi(comando[1]), atoi(comando[2]));
                 sprintf(buf, "Local removido.");
             }else{
                 sprintf(buf, "Local nao cadastrado.");
             }
-        }else if(mensagem[0]=="list" || mensagem[0]=="List" || mensagem[0]=="LIST"){
-            printlocais();
-            sprintf(buf, "Locais registrados no sistema: %c", final );
-        }else if(mensagem[0]=="query" || mensagem[0]=="Query" || mensagem[0]=="QUERY"){
-            nearest(int x,int y);
-           sprintf(buf, "Local mais proximo para sua vacinação: %i", d);
-        }else if(mensagem[0]=="kill" || mensagem[0]=="Kill" || mensagem[0]=="KILL"){
+        }else if(0==strcmp(comando[0], "list") || 0==strcmp(comando[0], "List") || 0==strcmp(comando[0], "LIST")){
+            
+            char aux1[100];
+            printLocais(aux1);
+            
+            sprintf(buf, "Locais registrados no sistema: %s", aux1 );
+        }else if(0==strcmp(comando[0], "query") || 0==strcmp(comando[0], "Query") || 0==strcmp(comando[0], "QUERY")){
+           struct Locations localmaisproximo = nearest(atoi(comando[1]) ,atoi(comando[2]));
+           sprintf(buf, "Local mais proximo para sua vacinação: %i %i", localmaisproximo.x, localmaisproximo.y);
+        }else if(0==strcmp(comando[0], "kill") || 0==strcmp(comando[0], "Kill") || 0==strcmp(comando[0], "KILL")){
             sprintf(buf, "Servidor finalizado.");
             exit(EXIT_SUCCESS);
         }else{
@@ -197,7 +229,7 @@ int main(int argc, char **argv) {
         }
 
         count = send(csock, buf, strlen(buf), 0); //envia retorno para o cliente de qual servidor esta conectado
-        if (count != strlen(buf) + 1) {
+        if (count != strlen(buf)) {
             logexit("send");
         }   
 
